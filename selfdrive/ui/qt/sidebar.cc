@@ -116,7 +116,7 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   if(Hardware::EON() && net_type == network_type[cereal::DeviceState::NetworkType::WIFI])
     p.drawText(r2, Qt::AlignCenter, wifi_addr);
   else
-    p.drawText(r, Qt::AlignCenter, net_type);
+    p.drawText(r2, Qt::AlignCenter, net_type);
 
   // metrics
   configFont(p, "Open Sans", 35, "Regular");
