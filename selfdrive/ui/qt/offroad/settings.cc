@@ -392,6 +392,12 @@ QWidget * community_panel() {
                                             "../assets/offroad/icon_road.png"
                                             ));
   toggles_list->addWidget(horizontal_line());
+  toggles_list->addWidget(new ParamControl("UsePID",
+                                            "Use PID",
+                                            "ON for pid / OFF for indi.",
+                                            "../assets/offroad/icon_road.png"
+                                              ));
+  toggles_list->addWidget(horizontal_line());
   toggles_list->addWidget(new ParamControl("ShowDebugUI",
                                             "Show Debug UI",
                                             "",

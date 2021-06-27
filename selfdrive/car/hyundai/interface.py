@@ -18,6 +18,7 @@ class CarInterface(CarInterfaceBase):
     super().__init__(CP, CarController, CarState)
     self.cp2 = self.CS.get_can2_parser(CP)
     self.mad_mode_enabled = Params().get_bool('MadModeEnabled')
+    self.use_PID = Params().get_bool('UsePID')
 
   @staticmethod
   def compute_gb(accel, speed):
@@ -47,17 +48,23 @@ class CarInterface(CarInterfaceBase):
     ret.maxSteeringAngleDeg = 90.
 
     # lateral
-    ret.lateralTuning.init('indi')
-    ret.lateralTuning.indi.innerLoopGainBP = [0.]
-    ret.lateralTuning.indi.innerLoopGainV = [3.1]
-    ret.lateralTuning.indi.outerLoopGainBP = [0.]
-    ret.lateralTuning.indi.outerLoopGainV = [2.5]
-    ret.lateralTuning.indi.timeConstantBP = [0.]
-    ret.lateralTuning.indi.timeConstantV = [1.4]
-    ret.lateralTuning.indi.actuatorEffectivenessBP = [0.]
-    ret.lateralTuning.indi.actuatorEffectivenessV = [2.]
+    if self.use_PID:
+      ret.lateralTuning.pid.kf = 0.00008
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.21], [0.08]]
+      ret.steerRatio = 11.6
+    else:
+      ret.lateralTuning.init('indi')
+      ret.lateralTuning.indi.innerLoopGainBP = [0.]
+      ret.lateralTuning.indi.innerLoopGainV = [3.1]
+      ret.lateralTuning.indi.outerLoopGainBP = [0.]
+      ret.lateralTuning.indi.outerLoopGainV = [2.5]
+      ret.lateralTuning.indi.timeConstantBP = [0.]
+      ret.lateralTuning.indi.timeConstantV = [1.4]
+      ret.lateralTuning.indi.actuatorEffectivenessBP = [0.]
+      ret.lateralTuning.indi.actuatorEffectivenessV = [2.]
+      ret.steerRatio = 16.5
 
-    ret.steerRatio = 16.5
     ret.steerActuatorDelay = 0.1
     ret.steerLimitTimer = 2.5
     ret.steerRateCost = 0.4

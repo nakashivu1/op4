@@ -45,7 +45,7 @@ def manager_init():
     ("MadModeEnabled", "1"),
     ("LaneChangeEnabled", "1"),
     ("AutoLaneChangeEnabled", "1"),
-
+    ("UsePID", "0"),
     ("SccSmootherSlowOnCurves", "1"),
     ("SccSmootherSyncGasPressed", "1"),
     ("FuseWithStockScc", "1"),
