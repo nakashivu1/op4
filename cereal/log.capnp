@@ -552,6 +552,8 @@ struct ControlsState @0x97ff69c53601abf1 {
   steerRateCost @68 :Float32;
   steerActuatorDelay @69 :Float32;
 
+  UsePID @70 :Bool;
+
   lateralControlState :union {
     indiState @52 :LateralINDIState;
     pidState @53 :LateralPIDState;

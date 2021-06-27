@@ -48,7 +48,7 @@ class CarInterface(CarInterfaceBase):
     ret.maxSteeringAngleDeg = 90.
 
     # lateral
-    if self.use_PID:
+    if Params().get_bool('UsePID'):
       ret.lateralTuning.pid.kf = 0.00008
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.21], [0.08]]
