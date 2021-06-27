@@ -92,12 +92,8 @@ class CarController():
 
     # Steering Torque
     new_steer = int(round(actuators.steer * CarControllerParams.STEER_MAX))
-    if Params().get_bool('UsePID'):
-      apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque,
-                                                  PIDCarControllerParams)
-    else:
-      apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque,
-                                                  CarControllerParams)
+    apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque,
+                                                CarControllerParams)
 
     self.steer_rate_limited = new_steer != apply_steer
 
