@@ -119,7 +119,6 @@ void Sidebar::paintEvent(QPaintEvent *event) {
     p.drawText(r2, Qt::AlignCenter, net_type);
 
   // metrics
-  configFont(p, "Open Sans", 35, "Regular");
   drawMetric(p, "TEMP", QString("%1°C").arg(temp_val), temp_status, 338);
   drawMetric(p, panda_str, "", panda_status, 518);
   drawMetric(p, "CONNECT\n" + connect_str, "", connect_status, 676);
