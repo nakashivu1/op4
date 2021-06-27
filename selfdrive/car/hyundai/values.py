@@ -18,7 +18,7 @@ class CarControllerParams:
   STEER_DRIVER_MULTIPLIER = 2
   STEER_DRIVER_FACTOR = 1
 
-class PIDCarControllerParams(CarControllerParams):
+class PIDCarControllerParams:
   STEER_MAX = 408 
   STEER_DELTA_UP = 3
   STEER_DELTA_DOWN = 7
