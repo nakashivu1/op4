@@ -11,6 +11,7 @@ class Sidebar : public QFrame {
   Q_PROPERTY(QString pandaStr MEMBER panda_str NOTIFY valueChanged);
   Q_PROPERTY(QColor pandaStatus MEMBER panda_status NOTIFY valueChanged);
   Q_PROPERTY(int tempVal MEMBER temp_val NOTIFY valueChanged);
+  Q_PROPERTY(int BattPercent MEMBER batt_percent NOTIFY valueChanged);
   Q_PROPERTY(QColor tempStatus MEMBER temp_status NOTIFY valueChanged);
   Q_PROPERTY(QString netType MEMBER net_type NOTIFY valueChanged);
   Q_PROPERTY(QImage netStrength MEMBER net_strength NOTIFY valueChanged);
@@ -68,7 +69,7 @@ private:
     {0, QImage("../assets/images/battery.png")},
     {1, QImage("../assets/images/battery_charging.png")},
   };
-  int m_batteryPercent = 0;
+  int batt_percent = 0;
   int m_battery_img;
   QImage net_strength;
 };

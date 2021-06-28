@@ -71,6 +71,7 @@ void Sidebar::updateState(const UIState &s) {
   }
   setProperty("tempStatus", tempStatus);
   setProperty("tempVal", (int)deviceState.getAmbientTempC());
+  setProperty("BattPercent", (int)deviceState.getBatteryPercent());
 
   QString pandaStr = "VEHICLE\nONLINE";
   QColor pandaStatus = good_color;
@@ -85,7 +86,6 @@ void Sidebar::updateState(const UIState &s) {
   setProperty("pandaStatus", pandaStatus);
 
   m_battery_img = s.scene.deviceState.getBatteryStatus() == "Charging" ? 1 : 0;
-  m_batteryPercent = s.scene.deviceState.getBatteryPercent();
 }
 
 void Sidebar::paintEvent(QPaintEvent *event) {
@@ -106,7 +106,7 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   p.setPen(QColor(0x00, 0x00, 0x00));
   const QRect r = QRect(80, 193, 100, 50);
   char battery_str[5];
-  snprintf(battery_str, sizeof(battery_str), "%d%%", m_batteryPercent);
+  snprintf(battery_str, sizeof(battery_str), "%d%%", batt_percent);
   p.drawText(r, Qt::AlignCenter, battery_str);
 
   configFont(p, "Open Sans", 30, "Bold");
