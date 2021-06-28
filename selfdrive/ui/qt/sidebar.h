@@ -16,6 +16,7 @@ class Sidebar : public QFrame {
   Q_PROPERTY(QString netType MEMBER net_type NOTIFY valueChanged);
   Q_PROPERTY(QImage netStrength MEMBER net_strength NOTIFY valueChanged);
   Q_PROPERTY(QString wifiAddr MEMBER wifi_addr NOTIFY valueChanged);
+  Q_PROPERTY(int BattStatus MEMBER m_battery_img NOTIFY valueChanged);
 
 public:
   explicit Sidebar(QWidget* parent = 0);
