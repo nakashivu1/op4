@@ -18,6 +18,7 @@
 #define UI_FEATURE_RIGHT_CPU_TEMP 1
 #define UI_FEATURE_RIGHT_AMBIENT_TEMP 1
 #define UI_FEATURE_RIGHT_BATTERY_LEVEL 1
+#define UI_FEATURE_RIGHT_FREESPACE_LEVEL 1
 #define UI_FEATURE_RIGHT_GPS_ALTITUDE 1
 #define UI_FEATURE_RIGHT_GPS_ACCURACY 1
 #define UI_FEATURE_RIGHT_GPS_SATELLITE 1
@@ -114,6 +115,7 @@ typedef struct UIScene {
   int blinker_blinkingrate;
   bool batteryCharging;
   int batteryPercent;
+  float freeSpacePercent;
   char batteryStatus[64];
   float tpmsFl, tpmsFr, tpmsRl, tpmsRr;
 
