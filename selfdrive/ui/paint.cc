@@ -743,7 +743,7 @@ static void bb_ui_draw_UI(UIState *s)
 
   const int bb_dmr_w = 180;
   const int bb_dmr_x = s->viz_rect.x + s->viz_rect.w - bb_dmr_w - (bdr_is * 2);
-  const int bb_dmr_y = (box_y + (bdr_is * 1.5)) + UI_FEATURE_RIGHT_Y;
+  const int bb_dmr_y = (box_y + (bdr_is * 1.5)) + UI_FEATURE_RIGHT_Y - 30;
 
 #if UI_FEATURE_LEFT
   bb_ui_draw_measures_left(s, bb_dml_x, bb_dml_y, bb_dml_w);
@@ -910,6 +910,61 @@ static void ui_draw_vision_bsd_right(UIState *s) {
   ui_draw_circle_image(s, bsd_x + (radius*2), bsd_y - (radius*2), radius, "bsd_r", s->scene.car_state.getRightBlindspot());
 }
 
+ // Draw TPMS Border
+static void ui_draw_tpms(UIState *s) {
+  int viz_tpms_w = 200;
+  int viz_tpms_h = 160;
+  int viz_tpms_x = s->viz_rect.x + s->viz_rect.w - 230;
+  int viz_tpms_y = s->viz_rect.x + 663;
+  char tpmsFl[32];
+  char tpmsFr[32];
+  char tpmsRl[32];
+  char tpmsRr[32];
+ 
+  const Rect rect = {viz_tpms_x, viz_tpms_y, viz_tpms_w, viz_tpms_h};
+  ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(80), 5, 20);
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
+  const int pos_x = viz_tpms_x + (viz_tpms_w / 2);
+  const int pos_y = 780;
+  const int pos_add = 50;
+  const int fontsize = 75;
+
+  ui_draw_text(s, pos_x, pos_y+pos_add, "TPMS (psi)", fontsize-20, COLOR_WHITE_ALPHA(200), "sans-regular");
+  snprintf(tpmsFl, sizeof(tpmsFl), "%.0f", s->scene.tpmsFl);
+  snprintf(tpmsFr, sizeof(tpmsFr), "%.0f", s->scene.tpmsFr);
+  snprintf(tpmsRl, sizeof(tpmsRl), "%.0f", s->scene.tpmsRl);
+  snprintf(tpmsRr, sizeof(tpmsRr), "%.0f", s->scene.tpmsRr);
+
+  if (s->scene.tpmsFl < 28) {
+    ui_draw_text(s, pos_x - pos_add, pos_y-pos_add, tpmsFl, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
+  } else if (s->scene.tpmsFl > 40) {
+    ui_draw_text(s, pos_x - pos_add, pos_y-pos_add, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
+  } else {
+    ui_draw_text(s, pos_x - pos_add, pos_y-pos_add, tpmsFl, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
+  }
+  if (s->scene.tpmsFr < 28) {
+    ui_draw_text(s, pos_x + pos_add, pos_y-pos_add, tpmsFr, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
+  } else if (s->scene.tpmsFr > 40) {
+    ui_draw_text(s, pos_x + pos_add, pos_y-pos_add, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
+  } else {
+    ui_draw_text(s, pos_x + pos_add, pos_y-pos_add, tpmsFr, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
+  }
+  if (s->scene.tpmsRl < 28) {
+    ui_draw_text(s, pos_x - pos_add, pos_y, tpmsRl, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
+  } else if (s->scene.tpmsRl > 40) {
+    ui_draw_text(s, pos_x - pos_add, pos_y, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
+  } else {
+    ui_draw_text(s, pos_x - pos_add, pos_y, tpmsRl, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
+  }
+  if (s->scene.tpmsRr < 28) {
+    ui_draw_text(s, pos_x + pos_add, pos_y, tpmsRr, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
+  } else if (s->scene.tpmsRr > 40) {
+    ui_draw_text(s, pos_x + pos_add, pos_y, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
+  } else {
+    ui_draw_text(s, pos_x + pos_add, pos_y, tpmsRr, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
+  }
+}
+
 static void ui_draw_vision_header(UIState *s) {
   NVGpaint gradient = nvgLinearGradient(s->vg, s->viz_rect.x,
                         s->viz_rect.y+(header_h-(header_h/2.5)),
@@ -920,64 +975,13 @@ static void ui_draw_vision_header(UIState *s) {
 
   ui_draw_vision_maxspeed(s);
   ui_draw_vision_speed(s);
-  //ui_draw_vision_event(s);
   bb_ui_draw_UI(s);
-  ui_draw_extras(s);
-}
-
- // Draw TPMS Border
-static void ui_draw_tpms(UIState *s) {
-  int viz_tpms_w = 200;
-  int viz_tpms_h = 160;
-  int viz_tpms_x = s->viz_rect.x + s->viz_rect.w - 230;
-  int viz_tpms_y = s->viz_rect.x + 673;
-  char tpmsFl[32];
-  char tpmsFr[32];
-  char tpmsRl[32];
-  char tpmsRr[32];
- 
-  const Rect rect = {viz_tpms_x, viz_tpms_y, viz_tpms_w, viz_tpms_h};
-  ui_draw_rect(s->vg, rect, COLOR_WHITE_ALPHA(80), 5, 20);
-  nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
-  const int pos_x = viz_tpms_x + (viz_tpms_w / 2);
-  const int pos_y = 790;
-  const int pos_add = 50;
-  const int fontsize = 75;
-
-  ui_draw_text(s, pos_x, pos_y+pos_add, "TPMS (psi)", fontsize-20, COLOR_WHITE_ALPHA(200), "sans-regular");
-  snprintf(tpmsFl, sizeof(tpmsFl), "%.0f", s->scene.tpmsFl);
-  snprintf(tpmsFr, sizeof(tpmsFr), "%.0f", s->scene.tpmsFr);
-  snprintf(tpmsRl, sizeof(tpmsRl), "%.0f", s->scene.tpmsRl);
-  snprintf(tpmsRr, sizeof(tpmsRr), "%.0f", s->scene.tpmsRr);
-
-  if (s->scene.tpmsFl < 25) {
-    ui_draw_text(s, pos_x - pos_add, pos_y-pos_add, tpmsFl, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
-  } else if (s->scene.tpmsFl > 50) {
-    ui_draw_text(s, pos_x - pos_add, pos_y-pos_add, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
-  } else {
-    ui_draw_text(s, pos_x - pos_add, pos_y-pos_add, tpmsFl, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
-  }
-  if (s->scene.tpmsFr < 25) {
-    ui_draw_text(s, pos_x + pos_add, pos_y-pos_add, tpmsFr, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
-  } else if (s->scene.tpmsFr > 50) {
-    ui_draw_text(s, pos_x + pos_add, pos_y-pos_add, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
-  } else {
-    ui_draw_text(s, pos_x + pos_add, pos_y-pos_add, tpmsFr, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
-  }
-  if (s->scene.tpmsRl < 25) {
-    ui_draw_text(s, pos_x - pos_add, pos_y, tpmsRl, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
-  } else if (s->scene.tpmsRl > 50) {
-    ui_draw_text(s, pos_x - pos_add, pos_y, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
-  } else {
-    ui_draw_text(s, pos_x - pos_add, pos_y, tpmsRl, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
-  }
-  if (s->scene.tpmsRr < 25) {
-    ui_draw_text(s, pos_x + pos_add, pos_y, tpmsRr, fontsize, nvgRGBA(255, 255, 0, 255), "sans-bold");
-  } else if (s->scene.tpmsRr > 50) {
-    ui_draw_text(s, pos_x + pos_add, pos_y, "-", fontsize, nvgRGBA(255, 66, 66, 255), "sans-semibold");
-  } else {
-    ui_draw_text(s, pos_x + pos_add, pos_y, tpmsRr, fontsize, nvgRGBA(102, 255, 51, 255), "sans-semibold");
-  }
+  ui_draw_vision_brake(s);
+  ui_draw_vision_autohold(s);
+  ui_draw_vision_face(s);
+  ui_draw_vision_bsd_left(s);
+  ui_draw_vision_bsd_right(s);
+  ui_draw_tpms(s);
 }
 
 //END: functions added for the display of various items
