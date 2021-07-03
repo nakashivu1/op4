@@ -170,7 +170,15 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
       emit reviewTrainingGuide();
     }
   }, "", this));
-  
+
+//RUN NTUNE
+    offroad_btns.append(new ButtonControl("Run Auto Tune", "RUN",
+                                        "This will run AutoTune for lateral", [=]() {
+    if (ConfirmationDialog::confirm("Are you sure you want to run nTune?", this)) {
+      system("cd /data/openpilot/selfdrive && python ntune.py");
+    }
+  }, "", this));
+
 //DELETE DASHCAM RECORDINGS
     offroad_btns.append(new ButtonControl("Delete all Dashcam Recordings", "DELETE",
                                         "This deletes Dashcam Video Recordings", [=]() {
