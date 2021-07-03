@@ -396,11 +396,6 @@ def thermald_thread():
 
     charging_disabled = phone_battery_management(charging_disabled, msg)
 
-    if charging_disabled:
-      msg.deviceState.batteryStatus = "Discharging"
-    else:
-      msg.deviceState.batteryStatus = "Charging"
-
     # Offroad power monitoring
     power_monitor.calculate(pandaState)
     msg.deviceState.offroadPowerUsageUwh = power_monitor.get_power_used()
