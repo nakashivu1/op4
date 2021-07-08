@@ -221,8 +221,21 @@ static void ui_draw_vision_lane_lines(UIState *s) {
       NVGcolor color = nvgRGBAf(1.0, 0.0, 0.0, std::clamp<float>(1.0 - scene.road_edge_stds[i], 0.0, 1.0));
       ui_draw_line(s, scene.road_edge_vertices[i], &color, nullptr);
     }
-    track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
-                                          COLOR_WHITE_ALPHA(180), COLOR_WHITE_ALPHA(0));
+
+    int steerOverride = s->scene.car_state.getSteeringPressed();
+    if (s->scene.controls_state.getEnabled()) {
+      // Draw colored track
+      if (steerOverride) {
+      track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h*.4,
+                                   nvgRGBA(15, 140, 250, 180), nvgRGBA(15, 140, 250, 0));
+      } else {
+      track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
+                                   nvgRGBA(55, 250, 10, 180), nvgRGBA(55, 250, 10, 0));
+      }                                   
+    } else {
+      track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
+                                          COLOR_WHITE_ALPHA(180), COLOR_WHITE_ALPHA(0));    
+    } 
   } else {
     track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
                                           COLOR_RED_ALPHA(180), COLOR_RED_ALPHA(0));

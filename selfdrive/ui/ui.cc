@@ -129,7 +129,11 @@ static void update_sockets(UIState *s){
 static void update_state(UIState *s) {
   SubMaster &sm = *(s->sm);
   UIScene &scene = s->scene;
-	
+
+  if (scene.started && sm.updated("controlsState")) {
+    scene.controls_state = sm["controlsState"].getControlsState();
+  }
+
   if (sm.updated("carState")) {
     scene.car_state = sm["carState"].getCarState();
     if(scene.leftBlinker!=scene.car_state.getLeftBlinker() || scene.rightBlinker!=scene.car_state.getRightBlinker()){
