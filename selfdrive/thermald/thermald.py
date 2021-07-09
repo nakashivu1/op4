@@ -408,6 +408,8 @@ def thermald_thread():
       if off_ts is None:
         off_ts = sec_since_boot()
 
+    charging_disabled = phone_battery_management(charging_disabled, msg)
+
     # Offroad power monitoring
     power_monitor.calculate(pandaState)
     msg.deviceState.offroadPowerUsageUwh = power_monitor.get_power_used()
