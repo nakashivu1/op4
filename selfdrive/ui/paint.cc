@@ -222,6 +222,7 @@ static void ui_draw_vision_lane_lines(UIState *s) {
     }
 
     int steerOverride = s->scene.car_state.getSteeringPressed();
+    auto controls_state = (*s->sm)["controlsState"].getControlsState();
     if (s->scene.controls_state.getEnabled()) {
       // Draw colored track
       if (steerOverride) {
