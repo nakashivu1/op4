@@ -18,6 +18,7 @@
 #define UI_FEATURE_RIGHT_CPU_TEMP 1
 #define UI_FEATURE_RIGHT_AMBIENT_TEMP 1
 #define UI_FEATURE_RIGHT_BATTERY_LEVEL 1
+#define UI_FEATURE_RIGHT_FREESPACE_LEVEL 1
 #define UI_FEATURE_RIGHT_GPS_ALTITUDE 1
 #define UI_FEATURE_RIGHT_GPS_ACCURACY 1
 #define UI_FEATURE_RIGHT_GPS_SATELLITE 1
@@ -103,6 +104,7 @@ typedef struct UIScene {
 
   mat3 view_from_calib;
   bool world_objects_visible;
+  float freeSpacePercent;
 
   cereal::PandaState::PandaType pandaType;
 
