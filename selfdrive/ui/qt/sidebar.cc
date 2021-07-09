@@ -74,6 +74,8 @@ void Sidebar::updateState(const UIState &s) {
   }
   setProperty("tempStatus", tempStatus);
   setProperty("tempVal", (int)deviceState.getAmbientTempC());
+  setProperty("BattPercent", (int)deviceState.getBatteryPercent());
+  setProperty("BattStatus", deviceState.getBatteryStatus() == "Charging" ? 1 : 0);
 
   QString pandaStr = "VEHICLE\nONLINE";
   QColor pandaStatus = good_color;
@@ -99,22 +101,21 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   p.setOpacity(1.0);
   p.drawImage(60, 1080 - 180 - 40, home_img);
 
-  // network
-  int x = 58;
-  const QColor gray(0x54, 0x54, 0x54);
-  for (int i = 0; i < 5; ++i) {
-    p.setBrush(i < net_strength ? Qt::white : gray);
-    p.drawEllipse(x, 196, 27, 27);
-    x += 37;
-  }
+  // batt percent and wifi ip
+  p.drawImage(68, 180, battery_imgs[m_battery_img]); // signal_imgs to battery_imgs
+  configFont(p, "Open Sans", 32, "Bold");
+  p.setPen(QColor(0x00, 0x00, 0x00));
+  const QRect r = QRect(80, 193, 100, 50);
+  char battery_str[5];
+  snprintf(battery_str, sizeof(battery_str), "%d%%", batt_percent);
+  p.drawText(r, Qt::AlignCenter, battery_str);
 
-  configFont(p, "Open Sans", 30, "Regular");
+  configFont(p, "Open Sans", 30, "Bold");
   p.setPen(QColor(0xff, 0xff, 0xff));
 
-  const QRect r = QRect(0, 247, event->rect().width(), 50);
-
+  const QRect r2 = QRect(0, 267, event->rect().width(), 50);
   if(Hardware::EON() && net_type == network_type[cereal::DeviceState::NetworkType::WIFI])
-    p.drawText(r, Qt::AlignCenter, wifi_addr);
+    p.drawText(r2, Qt::AlignCenter, wifi_addr);
   else
     p.drawText(r, Qt::AlignCenter, net_type);
 
