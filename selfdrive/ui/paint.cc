@@ -536,22 +536,22 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
   }
 
   // add battery level
-  if(UI_FEATURE_RIGHT_BATTERY_LEVEL) {
-    char val_str[16];
-    char uom_str[6];
-    char bat_lvl[4] = "";
-    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
+//  if(UI_FEATURE_RIGHT_BATTERY_LEVEL) {
+//    char val_str[16];
+//    char uom_str[6];
+//    char bat_lvl[4] = "";
+//    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
-    int batteryPercent = device_state.getBatteryPercent();
+//    int batteryPercent = device_state.getBatteryPercent();
 
-    snprintf(val_str, sizeof(val_str), "%d%%", batteryPercent);
-    snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "BAT LVL",
-        bb_rx, bb_ry, bb_uom_dx,
-        val_color, lab_color, uom_color,
-        value_fontSize, label_fontSize, uom_fontSize );
-    bb_ry = bb_y + bb_h;
-  }
+//    snprintf(val_str, sizeof(val_str), "%d%%", batteryPercent);
+//    snprintf(uom_str, sizeof(uom_str), "");
+//    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "BAT LVL",
+//        bb_rx, bb_ry, bb_uom_dx,
+//        val_color, lab_color, uom_color,
+//        value_fontSize, label_fontSize, uom_fontSize );
+//    bb_ry = bb_y + bb_h;
+//  }
 
   // add free space level
   float freeSpacePercent = device_state.getFreeSpacePercent();
@@ -612,22 +612,22 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
   }
 
   // add panda GPS satellite
-//  if (UI_FEATURE_RIGHT_GPS_SATELLITE) {
-//    char val_str[16];
-//    char uom_str[3];
-//    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
-//
-//    if(s->scene.satelliteCount < 6)
-//         val_color = nvgRGBA(255, 80, 80, 200);
+  if (UI_FEATURE_RIGHT_GPS_SATELLITE) {
+    char val_str[16];
+    char uom_str[3];
+    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
-//    snprintf(val_str, sizeof(val_str), "%d", s->scene.satelliteCount > 0 ? s->scene.satelliteCount : 0);
-//    snprintf(uom_str, sizeof(uom_str), "");
-//    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "SATELLITE",
-//        bb_rx, bb_ry, bb_uom_dx,
-//        val_color, lab_color, uom_color,
-//        value_fontSize, label_fontSize, uom_fontSize );
-//    bb_ry = bb_y + bb_h;
-//  }
+    if(s->scene.satelliteCount < 6)
+         val_color = nvgRGBA(255, 80, 80, 200);
+
+    snprintf(val_str, sizeof(val_str), "%d", s->scene.satelliteCount > 0 ? s->scene.satelliteCount : 0);
+    snprintf(uom_str, sizeof(uom_str), "");
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "SATELLITE",
+        bb_rx, bb_ry, bb_uom_dx,
+        val_color, lab_color, uom_color,
+        value_fontSize, label_fontSize, uom_fontSize );
+    bb_ry = bb_y + bb_h;
+  }
 
   //finally draw the frame
   bb_h += 40;
