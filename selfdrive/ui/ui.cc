@@ -300,6 +300,10 @@ static void update_extras(UIState *s)
    if(sm.updated("liveParameters"))
     scene.live_params = sm["liveParameters"].getLiveParameters();
 
+  if (sm.updated("carState")) {
+    auto event = sm["carState"];
+    scene.car_state = event.getCarState();
+  }
 
 #if UI_FEATURE_DASHCAM
    if(s->awake)
