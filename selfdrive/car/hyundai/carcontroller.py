@@ -159,12 +159,12 @@ class CarController():
     can_sends = []
     can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
                                    CS.lkas11, sys_warning, sys_state, enabled, left_lane, right_lane,
-                                   left_lane_warning, right_lane_warning, 0))
+                                   left_lane_warning, right_lane_warning, 0, keep_stock=True))
 
     if CS.mdps_bus or CS.scc_bus == 1:  # send lkas11 bus 1 if mdps or scc is on bus 1
       can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
                                      CS.lkas11, sys_warning, sys_state, enabled, left_lane, right_lane,
-                                     left_lane_warning, right_lane_warning, 1))
+                                     left_lane_warning, right_lane_warning, 1, keep_stock=True))
 
     if frame % 2 and CS.mdps_bus: # send clu11 to mdps if it is not on bus 0
       can_sends.append(create_clu11(self.packer, frame // 2 % 0x10, CS.mdps_bus, CS.clu11, Buttons.NONE, enabled_speed))
@@ -203,7 +203,7 @@ class CarController():
     self.scc_smoother.update(enabled, can_sends, self.packer, CC, CS, frame, apply_accel, controls)
 
     if CS.mdps_bus:  # send mdps12 to LKAS to prevent LKAS error
-      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+      can_sends.append(create_mdps12(self.packer, frame % 0x100, CS.mdps12))
 
     controls.apply_accel = apply_accel
     aReqValue = CS.scc12["aReqValue"]
