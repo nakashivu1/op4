@@ -9,17 +9,18 @@ hyundai_checksum = crcmod.mkCrcFun(0x11D, initCrc=0xFD, rev=False, xorOut=0xdf)
 def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
                   lkas11, sys_warning, sys_state, enabled,
                   left_lane, right_lane,
-                  left_lane_depart, right_lane_depart, bus, ldws_opt):
+                  left_lane_depart, right_lane_depart, bus, ldws_opt, keep_stock=False):
   values = copy.copy(lkas11)
-  values["CF_Lkas_LdwsSysState"] = sys_state
+  values["CF_Lkas_LdwsSysState"] = 3 if steer_req else sys_state
   values["CF_Lkas_SysWarning"] = 3 if sys_warning else 0
-  values["CF_Lkas_LdwsLHWarning"] = left_lane_depart
-  values["CF_Lkas_LdwsRHWarning"] = right_lane_depart
+  values["CF_Lkas_LdwsLHWarning"] = lkas11["CF_Lkas_LdwsLHWarning"]
+  values["CF_Lkas_LdwsRHWarning"] = lkas11["CF_Lkas_LdwsRHWarning"]
   values["CR_Lkas_StrToqReq"] = apply_steer
   values["CF_Lkas_ActToi"] = steer_req
   values["CF_Lkas_ToiFlt"] = 0
   values["CF_Lkas_MsgCount"] = frame % 0x10
   values["CF_Lkas_Chksum"] = 0
+  values["CF_Lkas_FcwCollisionWarning"] = lkas11["CF_Lkas_FcwCollisionWarning"]
 
   if car_fingerprint in FEATURES["send_lfa_mfa"]:
     values["CF_Lkas_LdwsActivemode"] = int(left_lane) + (int(right_lane) << 1)
@@ -43,7 +44,16 @@ def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
     # This field is actually LdwsActivemode
     # Genesis and Optima fault when forwarding while engaged
     values["CF_Lkas_LdwsActivemode"] = 2
-    values["CF_Lkas_SysWarning"] = lkas11["CF_Lkas_SysWarning"]
+    values["CF_Lkas_SysWarning"] = sys_warning
+    values["CF_Lkas_HbaSysState"] = lkas11["CF_Lkas_HbaSysState"] if keep_stock else 0
+    values["CF_Lkas_HbaOpt"] = lkas11["CF_Lkas_HbaOpt"] if keep_stock else 1
+    values["CF_Lkas_FcwOpt_USM"] = lkas11["CF_Lkas_FcwOpt_USM"] if keep_stock else 2
+    values["CF_Lkas_LdwsOpt_USM"] = lkas11["CF_Lkas_LdwsOpt_USM"] if keep_stock else 0
+    values["CF_Lkas_HbaLamp"] = lkas11["CF_Lkas_HbaLamp"] if keep_stock else 0
+    values["CF_Lkas_FcwBasReq"] = lkas11["CF_Lkas_FcwBasReq"] if keep_stock else 0
+    values["CF_Lkas_FcwOpt"] = lkas11["CF_Lkas_FcwOpt"] if keep_stock else 0
+    values["CF_Lkas_FcwSysState"] = lkas11["CF_Lkas_FcwSysState"] if keep_stock else 0
+    values["CF_Lkas_FusionState"] = lkas11["CF_Lkas_FusionState"] if keep_stock else 0
 
   elif car_fingerprint == CAR.SONATA_LF_TURBO:
     values["CF_Lkas_LdwsOpt_USM"] = 2

@@ -163,12 +163,12 @@ class CarController():
     can_sends = []
     can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
                                    CS.lkas11, sys_warning, sys_state, enabled, left_lane, right_lane,
-                                   left_lane_warning, right_lane_warning, 0, self.ldws_opt))
+                                   left_lane_warning, right_lane_warning, 0, self.ldws_opt, keep_stock=True))
 
     if CS.mdps_bus or CS.scc_bus == 1:  # send lkas11 bus 1 if mdps or scc is on bus 1
       can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
                                      CS.lkas11, sys_warning, sys_state, enabled, left_lane, right_lane,
-                                     left_lane_warning, right_lane_warning, 1, self.ldws_opt))
+                                     left_lane_warning, right_lane_warning, 1, self.ldws_opt, keep_stock=True))
 
     if frame % 2 and CS.mdps_bus: # send clu11 to mdps if it is not on bus 0
       can_sends.append(create_clu11(self.packer, frame // 2 % 0x10, CS.mdps_bus, CS.clu11, Buttons.NONE, enabled_speed))
@@ -176,7 +176,7 @@ class CarController():
     if pcm_cancel_cmd and (self.longcontrol and not self.mad_mode_enabled):
       can_sends.append(create_clu11(self.packer, frame % 0x10, CS.scc_bus, CS.clu11, Buttons.CANCEL, clu11_speed))
     else:
-      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+      can_sends.append(create_mdps12(self.packer, frame % 0x100, CS.mdps12))
 
     # fix auto resume - by neokii
     if CS.out.cruiseState.standstill:
