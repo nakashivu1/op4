@@ -121,6 +121,21 @@ def handle_fan_uno(max_cpu_temp, bat_temp, fan_speed, ignition):
 
   return new_speed
 
+# Keep EON max charge at 70%
+if EON:
+  def phone_battery_management(charging_disabled, msg):
+
+    if charging_disabled and (msg.deviceState.batteryPercent < 65):
+      charging_disabled = False
+      os.system('echo "1" > /sys/class/power_supply/battery/charging_enabled')
+    elif not charging_disabled and (msg.deviceState.batteryPercent > 70):
+      charging_disabled = True
+      os.system('echo "0" > /sys/class/power_supply/battery/charging_enabled')
+    elif msg.deviceState.batteryCurrent < 0 and (msg.deviceState.batteryPercent > 70):
+      charging_disabled = True
+      os.system('echo "0" > /sys/class/power_supply/battery/charging_enabled')
+
+    return charging_disabled
 
 def set_offroad_alert_if_changed(offroad_alert: str, show_alert: bool, extra_text: Optional[str]=None):
   if prev_offroad_states.get(offroad_alert, None) == (show_alert, extra_text):
@@ -166,6 +181,7 @@ def thermald_thread():
   handle_fan = None
   is_uno = False
   ui_running_prev = False
+  charging_disabled = False
 
   params = Params()
   power_monitor = PowerMonitoring()
@@ -398,7 +414,7 @@ def thermald_thread():
     msg.deviceState.carBatteryCapacityUwh = max(0, power_monitor.get_car_battery_capacity())
 
     # Check if we need to disable charging (handled by boardd)
-    msg.deviceState.chargingDisabled = power_monitor.should_disable_charging(pandaState, off_ts)
+    msg.deviceState.chargingDisabled = power_monitor.should_disable_charging(pandaState, off_ts) or charging_disabled
 
     # Check if we need to shut down
     if power_monitor.should_shutdown(pandaState, off_ts, started_seen):
@@ -431,6 +447,8 @@ def thermald_thread():
 
     should_start_prev = should_start
     startup_conditions_prev = startup_conditions.copy()
+
+    print(msg)
 
     # report to server once every 10 minutes
     if (count % int(600. / DT_TRML)) == 0:
