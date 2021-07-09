@@ -134,19 +134,6 @@ static void update_state(UIState *s) {
     scene.controls_state = sm["controlsState"].getControlsState();
   }
 
-  if (sm.updated("carState")) {
-    scene.car_state = sm["carState"].getCarState();
-    if(scene.leftBlinker!=scene.car_state.getLeftBlinker() || scene.rightBlinker!=scene.car_state.getRightBlinker()){
-      scene.blinker_blinkingrate = 120;
-    }
-    scene.leftBlinker = scene.car_state.getLeftBlinker();
-    scene.rightBlinker = scene.car_state.getRightBlinker();
-    scene.tpmsFl = scene.car_state.getTpmsFl();
-    scene.tpmsFr = scene.car_state.getTpmsFr();
-    scene.tpmsRl = scene.car_state.getTpmsRl();
-    scene.tpmsRr = scene.car_state.getTpmsRr();
-  }
-
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
     scene.engageable = sm["controlsState"].getControlsState().getEngageable();
