@@ -106,6 +106,9 @@ typedef struct UIScene {
 
   cereal::PandaState::PandaType pandaType;
 
+  cereal::CarState::Reader car_state;
+  cereal::ControlsState::Reader controls_state;
+
   // gps
   int satelliteCount;
   float gpsAccuracy;
