@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "selfdrive/common/params.cc"
 
 #define CAPTURE_STATE_NONE 0
 #define CAPTURE_STATE_CAPTURING 1
@@ -347,9 +348,14 @@ bool dashcam( UIState *s, int touch_x, int touch_y ) {
     stop_capture();
   }
 
-  if ((*s->sm)["carState"].getCarState().getVEgo() < 1.5 && !(*s->sm)["controlsState"].getControlsState().getEnabled()) {
-    stop_capture();
-  }
+  if (Params().getBool("AutoScreenRecording") == true) {
+    if ((*s->sm)["carState"].getCarState().getVEgo() > 2.1 && captureState == CAPTURE_STATE_NOT_CAPTURING 
+         && !(*s->sm)["controlsState"].getControlsState().getEnabled()) {
+      start_capture();
+    } else if ((*s->sm)["carState"].getCarState().getVEgo() < 1.5 && !(*s->sm)["controlsState"].getControlsState().getEnabled()) {
+      stop_capture();
+    }
+  }    
   //s->scene.recording = (captureState != CAPTURE_STATE_NOT_CAPTURING);
   
   return touched;

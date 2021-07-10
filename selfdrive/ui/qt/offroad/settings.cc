@@ -137,6 +137,24 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
                                         "Preview the driver facing camera to help optimize device mounting position for best driver monitoring experience. (vehicle must be off)");
   connect(dcamBtn, &ButtonControl::released, [=]() { emit showDriverView(); });
 
+//RUN NTUNE
+  auto nTuneBtn = new ButtonControl("Run Auto Tune", "RUN",
+                                        "This will run AutoTune for lateral");
+  connect(nTune, &ButtonControl::released, [=]() {
+    if (ConfirmationDialog::confirm("Are you sure you want to run nTune?", this)) {
+      system("cd /data/openpilot/selfdrive && python ntune.py");
+    }
+  });
+
+//DELETE DASHCAM RECORDINGS
+  auto DeleteDRBtn = new ButtonControl("Delete all Dashcam Recordings", "DELETE",
+                                        "This deletes Dashcam Video Recordings");
+  connect(SRBtn, &ButtonControl::released, [=]() { 
+    if (ConfirmationDialog::confirm("Are you sure you want to delete all dashcam recordings?", this)) {
+      system("cd /storage/emulated/0/videos && rm *.*");
+    }
+  });
+
   QString resetCalibDesc = "openpilot requires the device to be mounted within 4° left or right and within 5° up or down. openpilot is continuously calibrating, resetting is rarely required.";
   auto resetCalibBtn = new ButtonControl("Reset Calibration", "RESET", resetCalibDesc);
   connect(resetCalibBtn, &ButtonControl::released, [=]() {
@@ -184,7 +202,7 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
     }
   });
 
-  for (auto btn : {dcamBtn, resetCalibBtn, retrainingBtn, uninstallBtn}) {
+  for (auto btn : {dcamBtn, nTuneBtn, DeleteDRBtn, resetCalibBtn, retrainingBtn, uninstallBtn}) {
     if (btn) {
       main_layout->addWidget(horizontal_line());
       connect(parent, SIGNAL(offroadTransition(bool)), btn, SLOT(setEnabled(bool)));
@@ -422,6 +440,12 @@ QWidget * community_panel() {
                                             "Use by fusion with stock scc",
                                             "",
                                             "../assets/offroad/icon_road.png"
+                                            ));
+  toggles_list->addWidget(horizontal_line());
+  toggles_list->addWidget(new ParamControl("AutoScreenRecording",
+                                            "Auto start screen recording",
+                                            "",
+                                            "../assets/offroad/icon_eon.png"
                                             ));
   toggles_list->addWidget(horizontal_line());
   toggles_list->addWidget(new ParamControl("ShowDebugUI",
