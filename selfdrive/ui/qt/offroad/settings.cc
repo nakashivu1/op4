@@ -140,7 +140,7 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
 //RUN NTUNE
   auto nTuneBtn = new ButtonControl("Run Auto Tune", "RUN",
                                         "This will run AutoTune for lateral");
-  connect(nTune, &ButtonControl::released, [=]() {
+  connect(nTuneBtn, &ButtonControl::released, [=]() {
     if (ConfirmationDialog::confirm("Are you sure you want to run nTune?", this)) {
       system("cd /data/openpilot/selfdrive && python ntune.py");
     }
@@ -149,7 +149,7 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
 //DELETE DASHCAM RECORDINGS
   auto DeleteDRBtn = new ButtonControl("Delete all Dashcam Recordings", "DELETE",
                                         "This deletes Dashcam Video Recordings");
-  connect(SRBtn, &ButtonControl::released, [=]() { 
+  connect(DeleteDRBtn, &ButtonControl::released, [=]() { 
     if (ConfirmationDialog::confirm("Are you sure you want to delete all dashcam recordings?", this)) {
       system("cd /storage/emulated/0/videos && rm *.*");
     }
