@@ -73,7 +73,7 @@ PrimeUserWidget::PrimeUserWidget(QWidget* parent) : QWidget(parent) {
   mainLayout = new QVBoxLayout(this);
   mainLayout->setMargin(30);
 
-  QLabel* commaPrime = new QLabel("COMMA PRIME");
+  QLabel* commaPrime = new QLabel("Retropilot Connected");
   mainLayout->addWidget(commaPrime, 0, Qt::AlignTop);
 
   username = new QLabel();
@@ -82,7 +82,7 @@ PrimeUserWidget::PrimeUserWidget(QWidget* parent) : QWidget(parent) {
 
   mainLayout->addSpacing(100);
 
-  QLabel* commaPoints = new QLabel("COMMA POINTS");
+  QLabel* commaPoints = new QLabel("");
   commaPoints->setStyleSheet(R"(
     color: #b8b8b8;
   )");
