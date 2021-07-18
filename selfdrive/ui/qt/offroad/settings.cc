@@ -143,15 +143,27 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
   connect(nTuneBtn, &ButtonControl::released, [=]() {
     if (ConfirmationDialog::confirm("Are you sure you want to run nTune?", this)) {
       system("cd /data/openpilot/selfdrive && python ntune.py");
+      ConfirmationDialog::confirm("Completed", this); 
     }
   });
 
 //DELETE DASHCAM RECORDINGS
-  auto DeleteDRBtn = new ButtonControl("Delete all Dashcam Recordings", "DELETE",
-                                        "This deletes Dashcam Video Recordings");
+  auto DeleteDRBtn = new ButtonControl("Delete all Screen Recordings", "DELETE",
+                                        "This deletes UI Dashcam Video Recordings");
   connect(DeleteDRBtn, &ButtonControl::released, [=]() { 
     if (ConfirmationDialog::confirm("Are you sure you want to delete all dashcam recordings?", this)) {
       system("cd /storage/emulated/0/videos && rm *.*");
+      ConfirmationDialog::confirm("Completed", this); 
+    }
+  });
+
+//DELETE DRIVES RECORDINGS
+  auto DeleteRawVidBtn = new ButtonControl("Delete all Drives Recordings", "DELETE",
+                                        "This deletes RAW Video Recordings");
+  connect(DeleteRawVidBtn, &ButtonControl::released, [=]() { 
+    if (ConfirmationDialog::confirm("Are you sure you want to delete all dashcam recordings?", this)) {
+      system("cd /storage/emulated/0/realdata && rm *.*");
+      ConfirmationDialog::confirm("Completed", this); 
     }
   });
 
@@ -202,7 +214,7 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
     }
   });
 
-  for (auto btn : {dcamBtn, nTuneBtn, DeleteDRBtn, resetCalibBtn, retrainingBtn, uninstallBtn}) {
+  for (auto btn : {dcamBtn, nTuneBtn, DeleteDRBtn, DeleteRawVidBtn, resetCalibBtn, retrainingBtn, uninstallBtn}) {
     if (btn) {
       main_layout->addWidget(horizontal_line());
       connect(parent, SIGNAL(offroadTransition(bool)), btn, SLOT(setEnabled(bool)));
