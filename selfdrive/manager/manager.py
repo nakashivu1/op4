@@ -39,7 +39,8 @@ def manager_init():
     ("HasAcceptedTerms", "0"),
     ("OpenpilotEnabledToggle", "1"),
     ("IsMetric", "1"),
-
+    ("LegacySshKey", "1"),
+  
     # HKG
     ("UseClusterSpeed", "1"),
     ("LongControlEnabled", "0"),

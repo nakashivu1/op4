@@ -330,6 +330,8 @@ QWidget * network_panel(QWidget * parent) {
   layout->addWidget(new SshToggle());
   layout->addWidget(horizontal_line());
   layout->addWidget(new SshControl());
+  layout->addWidget(horizontal_line());
+  layout->addWidget(new SshLegacyToggle());
 
   layout->addStretch(1);
 #else

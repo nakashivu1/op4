@@ -32,3 +32,15 @@ private:
   void refresh();
   void getUserKeys(const QString &username);
 };
+
+class SshLegacyToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  SshLegacyToggle() : ToggleControl("Use Old Public Key", "When connecting via SSH, the existing public key (0.8.2 or lower) is used.", "", Params().getBool("LegacySshKey")) {
+    QObject::connect(this, &SshLegacyToggle::toggleFlipped, [=](int state) {
+      char value = state ? '1' : '0';
+      Params().put("LegacySshKey", &value, 1);
+    });
+  }
+};

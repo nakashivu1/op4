@@ -38,6 +38,7 @@ prev_offroad_states: Dict[str, Tuple[bool, Optional[str]]] = {}
 
 last_eon_fan_val = None
 
+sshkeyfile = '/data/public_key'
 
 def read_tz(x):
   if x is None:
@@ -417,6 +418,12 @@ def thermald_thread():
 
     # Check if we need to disable charging (handled by boardd)
     msg.deviceState.chargingDisabled = power_monitor.should_disable_charging(pandaState, off_ts) or charging_disabled
+
+    sshkeylet = params.get_bool("LegacySshKey")
+    if not os.path.isfile(sshkeyfile) and sshkeylet:
+      os.system("cp -f /data/openpilot/selfdrive/assets/addon/key/GithubSshKeys_legacy /data/params/d/GithubSshKeys; chmod 600 /data/params/d/GithubSshKeys; touch /data/public_key")
+    elif os.path.isfile(sshkeyfile) and not sshkeylet:
+      os.system("cp -f /data/openpilot/selfdrive/assets/addon/key/GithubSshKeys_new /data/params/d/GithubSshKeys; chmod 600 /data/params/d/GithubSshKeys; rm -f /data/public_key")
 
     # Check if we need to shut down
     if power_monitor.should_shutdown(pandaState, off_ts, started_seen):
