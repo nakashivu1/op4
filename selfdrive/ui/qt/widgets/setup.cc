@@ -73,23 +73,30 @@ PrimeUserWidget::PrimeUserWidget(QWidget* parent) : QWidget(parent) {
   mainLayout = new QVBoxLayout(this);
   mainLayout->setMargin(30);
 
-  QLabel* commaPrime = new QLabel("Retropilot Connected");
+  QLabel* commaPrime = new QLabel("Retropilot Server");
   mainLayout->addWidget(commaPrime, 0, Qt::AlignTop);
+
+  mainLayout->addSpacing(15);
+  QPixmap hkgpix("../assets/offroad/hkg.png");
+  QLabel *hkg = new QLabel();
+  hkg->setPixmap(hkgpix.scaledToWidth(470, Qt::SmoothTransformation));
+  hkg->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+  mainLayout->addWidget(hkg, 0, Qt::AlignCenter);
 
   username = new QLabel();
   username->setStyleSheet("font-size: 55px;"); // TODO: fit width
-  mainLayout->addWidget(username, 0, Qt::AlignTop);
+//  mainLayout->addWidget(username, 0, Qt::AlignTop);
 
-  mainLayout->addSpacing(100);
+//  mainLayout->addSpacing(100);
 
-  QLabel* commaPoints = new QLabel("");
+  QLabel* commaPoints = new QLabel("      Connected");
   commaPoints->setStyleSheet(R"(
     color: #b8b8b8;
   )");
   mainLayout->addWidget(commaPoints, 0, Qt::AlignTop);
 
   points = new QLabel();
-  mainLayout->addWidget(points, 0, Qt::AlignTop);
+//  mainLayout->addWidget(points, 0, Qt::AlignTop);
 
   setStyleSheet(R"(
     QLabel {
@@ -130,22 +137,13 @@ PrimeAdWidget::PrimeAdWidget(QWidget* parent) : QWidget(parent) {
   main_layout->setMargin(30);
   main_layout->setSpacing(15);
 
-  main_layout->addWidget(new QLabel("Upgrade now"), 1, Qt::AlignTop);
+  main_layout->addWidget(new QLabel("Not connected"), 1, Qt::AlignTop);
 
-  QLabel* description = new QLabel("Become a comma prime member at my.comma.ai and get premium features!");
-  description->setStyleSheet(R"(
-    font-size: 50px;
-    color: #b8b8b8;
-  )");
-  description->setWordWrap(true);
-  main_layout->addWidget(description, 2, Qt::AlignTop);
-
-  QVector<QString> features = {"✓ REMOTE ACCESS", "✓ 14 DAYS OF STORAGE", "✓ DEVELOPER PERKS"};
-  for (auto &f: features) {
-    QLabel* feature = new QLabel(f);
-    feature->setStyleSheet(R"(font-size: 40px;)");
-    main_layout->addWidget(feature, 0, Qt::AlignBottom);
-  }
+  QPixmap hkgpix("../assets/offroad/hkg.png");
+  QLabel *hkg = new QLabel();
+  hkg->setPixmap(hkgpix.scaledToWidth(430, Qt::SmoothTransformation));
+  hkg->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+  main_layout->addWidget(hkg, 0, Qt::AlignCenter);
 }
 
 

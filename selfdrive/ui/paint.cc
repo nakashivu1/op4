@@ -210,12 +210,24 @@ static void draw_frame(UIState *s) {
 
 static void ui_draw_vision_lane_lines(UIState *s) {
   const UIScene &scene = s->scene;
+  float red_lvl = 0.0;
+  float green_lvl = 0.0;
   NVGpaint track_bg;
   if (!scene.end_to_end) {
     // paint lanelines
     for (int i = 0; i < std::size(scene.lane_line_vertices); i++) {
-      NVGcolor color = nvgRGBAf(1.0, 1.0, 1.0, scene.lane_line_probs[i]);
-      ui_draw_line(s, scene.lane_line_vertices[i], &color, nullptr);
+      red_lvl = 0.0;
+      green_lvl = 0.0;
+      if (scene.lane_line_probs[i] > 0.4){
+        red_lvl = 1.0 - (scene.lane_line_probs[i] - 0.4) * 2.5;
+        green_lvl = 1.0 ;
+      }
+      else {
+        red_lvl = 1.0 ;
+        green_lvl = 1.0 - (0.4 - scene.lane_line_probs[i]) * 2.5;
+      }
+      NVGcolor lane_color = nvgRGBAf(red_lvl, green_lvl, 0, 1);
+      ui_draw_line(s, scene.lane_line_vertices[i], &lane_color, nullptr);
     }
 
     // paint road edges
@@ -1007,17 +1019,33 @@ static void ui_draw_vision_face(UIState *s) {
 
   // Draw BSM
 static void ui_draw_vision_bsd_left(UIState *s) {
-  const int radius = 100;
+  const UIScene *scene = &s->scene;
+  const int radius = 140;
   const int bsd_x = (s->viz_rect.x + radius + (bdr_s*25));
-  const int bsd_y = (s->viz_rect.bottom() - footer_h * 2.0);
-  ui_draw_circle_image(s, bsd_x, bsd_y - (radius*2), radius, "bsd_l", s->scene.car_state.getLeftBlindspot());
+  const int bsd_y = (s->viz_rect.bottom() - footer_h * 1.5);
+
+  auto car_state = (*s->sm)["carState"].getCarState();
+  bool leftbs_valid = car_state.getLeftBlindspot();
+  float leftbs_img_alpha = leftbs_valid ? 1.0f : 0.01f;
+  float leftbs_bg_alpha = leftbs_valid ? 0.1f : 0.01f;
+  NVGcolor leftbs_bg = nvgRGBA(0, 0, 0, (255 * leftbs_bg_alpha));
+
+  ui_draw_circle_image(s, bsd_x, bsd_y - (radius*2), radius, "bsd_l", leftbs_bg, leftbs_img_alpha);
 }
 
 static void ui_draw_vision_bsd_right(UIState *s) {
-  const int radius = 100;
+  const UIScene *scene = &s->scene;
+  const int radius = 140;
   const int bsd_x = (s->viz_rect.x + radius + (bdr_s*52));
-  const int bsd_y = (s->viz_rect.bottom() - footer_h * 2.0);
-  ui_draw_circle_image(s, bsd_x + (radius*2), bsd_y - (radius*2), radius, "bsd_r", s->scene.car_state.getRightBlindspot());
+  const int bsd_y = (s->viz_rect.bottom() - footer_h * 1.5);
+
+  auto car_state = (*s->sm)["carState"].getCarState();
+  bool rightbs_valid = car_state.getRightBlindspot();
+  float rightbs_img_alpha = rightbs_valid ? 1.0f : 0.01f;
+  float rightbs_bg_alpha = rightbs_valid ? 0.1f : 0.01f;
+  NVGcolor rightbs_bg = nvgRGBA(0, 0, 0, (255 * rightbs_bg_alpha));
+
+  ui_draw_circle_image(s, bsd_x + (20*2), bsd_y - (radius*2), radius, "bsd_r", rightbs_bg, rightbs_img_alpha);
 }
 
  // Draw TPMS Border

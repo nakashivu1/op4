@@ -116,6 +116,7 @@ typedef struct UIScene {
   bool leftblindspot, rightblindspot;
   int blinker_blinkingrate;
   float tpmsFl, tpmsFr, tpmsRl, tpmsRr;
+  bool is_OpenpilotViewEnabled;
 
   cereal::PandaState::PandaType pandaType;
 

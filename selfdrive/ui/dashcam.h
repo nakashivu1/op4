@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "selfdrive/common/params.cc"
+#include "ui.h"
 
 #define CAPTURE_STATE_NONE 0
 #define CAPTURE_STATE_CAPTURING 1
@@ -260,7 +261,7 @@ void draw_lock_button(UIState *s) {
 
 static void screen_draw_button(UIState *s, int touch_x, int touch_y) {
   // Set button to bottom left of screen
-  if (s->vipc_client->connected){
+  if (s->vipc_client->connected || s->scene.is_OpenpilotViewEnabled) {
 
     //if (captureState == CAPTURE_STATE_CAPTURING) {
     //  draw_lock_button(s);

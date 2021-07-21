@@ -9,6 +9,7 @@ from common.realtime import sec_since_boot
 from selfdrive.hardware import HARDWARE
 from selfdrive.swaglog import cloudlog
 
+PANDA_OUTPUT_VOLTAGE = 5.28
 CAR_VOLTAGE_LOW_PASS_K = 0.091 # LPF gain for 5s tau (dt/tau / (dt/tau + 1))
 
 # A C2 uses about 1W while idling, and 30h seens like a good shutoff for most cars
@@ -20,6 +21,22 @@ VBATT_PAUSE_CHARGING = 11.0           # Lower limit on the LPF car battery volta
 VBATT_INSTANT_PAUSE_CHARGING = 7.0    # Lower limit on the instant car battery voltage measurements to avoid triggering on instant power loss
 MAX_TIME_OFFROAD_S = 30*3600
 MIN_ON_TIME_S = 3600
+
+# Parameters
+def get_battery_capacity():
+  return _read_param("/sys/class/power_supply/battery/capacity", int)
+
+# Helpers
+def _read_param(path, parser, default=0):
+  try:
+    with open(path) as f:
+      return parser(f.read())
+  except Exception:
+    return default
+
+def panda_current_to_actual_current(panda_current):
+  # From white/grey panda schematic
+  return (3.3 - (panda_current * 3.3 / 4096)) / 8.25
 
 class PowerMonitoring:
   def __init__(self):

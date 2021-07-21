@@ -44,3 +44,17 @@ public:
     });
   }
 };
+
+// openpilot Preview
+class OpenpilotView : public AbstractControl {
+  Q_OBJECT
+
+public:
+  OpenpilotView();
+
+private:
+  QPushButton btn;
+  Params params;
+  
+  void refresh();
+};

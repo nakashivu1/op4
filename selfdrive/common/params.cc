@@ -242,6 +242,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"ShowDebugUI", PERSISTENT},
     {"CustomLeadMark", PERSISTENT},
     {"LegacySshKey", PERSISTENT},
+    {"IsOpenpilotViewEnabled", CLEAR_ON_MANAGER_START},
     {"AutoScreenRecording", PERSISTENT},
 };
 

@@ -131,6 +131,10 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
   main_layout->addWidget(horizontal_line());
   main_layout->addLayout(reset_layout);
 
+  // Openpilot View
+  main_layout->addWidget(horizontal_line());
+  main_layout->addWidget(new OpenpilotView());
+
   // offroad-only buttons
 
   auto dcamBtn = new ButtonControl("Driver Camera", "PREVIEW",
