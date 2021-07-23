@@ -349,12 +349,12 @@ bool dashcam( UIState *s, int touch_x, int touch_y ) {
     stop_capture();
   }
 
-  if (Params().getBool("AutoScreenRecording") == true) {
+  if (Params().getBool("AutoScreenRecording") == true || Params().getBool("EnableLogger") == false) {
     if ((*s->sm)["carState"].getCarState().getVEgo() > 2.1 && captureState == CAPTURE_STATE_NOT_CAPTURING 
          && !(*s->sm)["controlsState"].getControlsState().getEnabled()) {
       start_capture();
-    } else if ((*s->sm)["carState"].getCarState().getVEgo() < 1.5 && !(*s->sm)["controlsState"].getControlsState().getEnabled()) {
-      stop_capture();
+//    } else if ((*s->sm)["carState"].getCarState().getVEgo() < 1.5 && !(*s->sm)["controlsState"].getControlsState().getEnabled()) {
+//      stop_capture();
     }
   }    
   //s->scene.recording = (captureState != CAPTURE_STATE_NOT_CAPTURING);

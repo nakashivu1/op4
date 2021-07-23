@@ -93,8 +93,14 @@ class CarState(CarStateBase):
     ret.steeringAngleDeg = cp_sas.vl["SAS11"]['SAS_Angle']
     ret.steeringRateDeg = cp_sas.vl["SAS11"]['SAS_Speed']
     ret.yawRate = cp.vl["ESP12"]['YAW_RATE']
-    ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(200, cp.vl["CGW1"]['CF_Gway_TurnSigLh'],
-                                                            cp.vl["CGW1"]['CF_Gway_TurnSigRh'])
+
+    if ret.vEgo > 15.0:
+      ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(300, cp.vl["CGW1"]['CF_Gway_TurnSigLh'],
+                                                              cp.vl["CGW1"]['CF_Gway_TurnSigRh'])
+    else:
+      ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(50, cp.vl["CGW1"]['CF_Gway_TurnSigLh'],
+                                                              cp.vl["CGW1"]['CF_Gway_TurnSigRh'])
+
     ret.steeringTorque = cp_mdps.vl["MDPS12"]['CR_Mdps_StrColTq']
     ret.steeringTorqueEps = cp_mdps.vl["MDPS12"]['CR_Mdps_OutTq']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD

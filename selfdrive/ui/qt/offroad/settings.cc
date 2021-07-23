@@ -59,7 +59,11 @@ TogglesPanel::TogglesPanel(QWidget *parent) : QWidget(parent) {
                                   "Use features from the open source community that are not maintained or supported by comma.ai and have not been confirmed to meet the standard safety model. These features include community supported cars and community supported hardware. Be extra cautious when using these features",
                                   "../assets/offroad/icon_shell.png",
                                   this));
-
+  toggles.append(new ParamControl("EnableLogger",
+                                  "Enable Logger",
+                                  "Record driving logs for data analysis",
+                                  "../assets/offroad/icon_shell.png",
+                                  this));
   toggles.append(new ParamControl("UploadRaw",
                                   "Upload Raw Logs",
                                   "Upload full logs and full resolution video by default while on WiFi. If not enabled, individual logs can be marked for upload at my.comma.ai/useradmin.",
