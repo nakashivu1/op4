@@ -82,6 +82,7 @@ void OnroadAlerts::updateState(const UIState &s) {
         if (!s.scene.is_OpenpilotViewEnabled) {
           // car is started, but controlsState hasn't been seen at all
           updateAlert(CONTROLS_WAITING_ALERT);
+        }
       } else if ((nanos_since_boot() - sm.rcv_time("controlsState")) / 1e9 > CONTROLS_TIMEOUT) {
         // car is started, but controls is lagging or died
         updateAlert(CONTROLS_UNRESPONSIVE_ALERT);

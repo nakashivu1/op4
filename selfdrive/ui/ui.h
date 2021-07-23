@@ -172,7 +172,6 @@ typedef struct UIScene {
   cereal::CarParams::Reader car_params;
   cereal::GpsLocationData::Reader gps_ext;
   cereal::LiveParametersData::Reader live_params;
-  int satelliteCount;
 
 } UIScene;
 

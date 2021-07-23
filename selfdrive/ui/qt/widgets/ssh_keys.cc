@@ -79,7 +79,7 @@ OpenpilotView::OpenpilotView() : AbstractControl("Openpilot Preview", "Views ope
   btn.setFixedSize(250, 100);
   hlayout->addWidget(&btn);
 
-  QObject::connect(&btn, &QPushButton::released, [=]() {
+  QObject::connect(&btn, &QPushButton::clicked, [=]() {
     bool stat = params.getBool("IsOpenpilotViewEnabled");
     if (stat) {
       params.putBool("IsOpenpilotViewEnabled", false);
