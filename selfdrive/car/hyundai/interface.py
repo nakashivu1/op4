@@ -68,11 +68,11 @@ class CarInterface(CarInterfaceBase):
 
     # longitudinal
     ret.longitudinalTuning.kpBP = [0, 10.*CV.KPH_TO_MS, 20.*CV.KPH_TO_MS, 40.*CV.KPH_TO_MS, 70.*CV.KPH_TO_MS, 100.*CV.KPH_TO_MS, 130.*CV.KPH_TO_MS]
-    ret.longitudinalTuning.kpV = [1.2, 0.95, 0.8, 0.65, 0.53, 0.43, 0.325]
+    ret.longitudinalTuning.kpV = [1.23, 0.97, 0.83, 0.68, 0.57, 0.48, 0.38]
     ret.longitudinalTuning.kiBP = [0, 130.*CV.KPH_TO_MS]
-    ret.longitudinalTuning.kiV = [0.07, 0.03]
-    ret.longitudinalTuning.kfBP = [0., 130.*CV.KPH_TO_MS]
-    ret.longitudinalTuning.kfV = [1.0, 0.4]
+    ret.longitudinalTuning.kiV = [0.02, 0.015]
+    ret.longitudinalTuning.kfBP = [10.*CV.KPH_TO_MS, 130.*CV.KPH_TO_MS]
+    ret.longitudinalTuning.kfV = [1.15, 0.8]
     ret.longitudinalTuning.deadzoneBP = [0., 100.*CV.KPH_TO_MS]
     ret.longitudinalTuning.deadzoneV = [0., 0.015]
 
@@ -80,7 +80,7 @@ class CarInterface(CarInterfaceBase):
     ret.gasMaxV = [0.6, 0.41, 0.32, 0.24, 0.17, 0.13]
 
     ret.brakeMaxBP = [0, 70.*CV.KPH_TO_MS, 130.*CV.KPH_TO_MS]
-    ret.brakeMaxV = [1.5, 1.3, 0.78]
+    ret.brakeMaxV = [1.5, 1.3, 0.8]
 
     ret.stoppingBrakeRate = 0.2  # brake_travel/s while trying to stop
     ret.startingBrakeRate = 1.0  # brake_travel/s while releasing on restart
@@ -279,7 +279,7 @@ class CarInterface(CarInterfaceBase):
     print('fingerprint', fingerprint)
 
     ret.radarOffCan = ret.sccBus == -1
-    ret.enableCruise = not ret.radarOffCan
+    ret.pcmCruise = not ret.radarOffCan
 
     # set safety_hyundai_community only for non-SCC, MDPS harrness or SCC harrness cars or cars that have unknown issue
     if ret.radarOffCan or ret.mdpsBus == 1 or ret.openpilotLongitudinalControl or ret.sccBus == 1 or Params().get_bool('MadModeEnabled'):
@@ -294,10 +294,10 @@ class CarInterface(CarInterfaceBase):
     ret = self.CS.update(self.cp, self.cp2, self.cp_cam)
     ret.canValid = self.cp.can_valid and self.cp2.can_valid and self.cp_cam.can_valid
 
-    if self.CP.enableCruise and not self.CC.scc_live:
-      self.CP.enableCruise = False
-    elif self.CC.scc_live and not self.CP.enableCruise:
-      self.CP.enableCruise = True
+    if self.CP.pcmCruise and not self.CC.scc_live:
+      self.CP.pcmCruise = False
+    elif self.CC.scc_live and not self.CP.pcmCruise:
+      self.CP.pcmCruise = True
 
     # most HKG cars has no long control, it is safer and easier to engage by main on
 

@@ -19,7 +19,6 @@ def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
   values["CF_Lkas_ActToi"] = steer_req
   values["CF_Lkas_ToiFlt"] = 0
   values["CF_Lkas_MsgCount"] = frame % 0x10
-  values["CF_Lkas_Chksum"] = 0
   values["CF_Lkas_FcwCollisionWarning"] = lkas11["CF_Lkas_FcwCollisionWarning"]
 
   if car_fingerprint in FEATURES["send_lfa_mfa"]:
