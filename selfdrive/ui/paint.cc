@@ -212,22 +212,31 @@ static void ui_draw_vision_lane_lines(UIState *s) {
   const UIScene &scene = s->scene;
   float red_lvl = 0.0;
   float green_lvl = 0.0;
+  int steerOverride = s->scene.car_state.getSteeringPressed();
+  auto controls_state = (*s->sm)["controlsState"].getControlsState();
   NVGpaint track_bg;
   if (!scene.end_to_end) {
-    // paint lanelines
-    for (int i = 0; i < std::size(scene.lane_line_vertices); i++) {
-      red_lvl = 0.0;
-      green_lvl = 0.0;
-      if (scene.lane_line_probs[i] > 0.4){
-        red_lvl = 1.0 - (scene.lane_line_probs[i] - 0.4) * 2.5;
-        green_lvl = 1.0 ;
+    if (s->scene.controls_state.getEnabled()) {
+      // paint lanelines
+      for (int i = 0; i < std::size(scene.lane_line_vertices); i++) {
+        red_lvl = 0.0;
+        green_lvl = 0.0;
+        if (scene.lane_line_probs[i] > 0.4){
+          red_lvl = 1.0 - (scene.lane_line_probs[i] - 0.4) * 2.5;
+          green_lvl = 1.0 ;
+        }
+        else {
+          red_lvl = 1.0 ;
+          green_lvl = 1.0 - (0.4 - scene.lane_line_probs[i]) * 2.5;
+        }
+        NVGcolor lane_color = nvgRGBAf(red_lvl, green_lvl, 0, 1);
+        ui_draw_line(s, scene.lane_line_vertices[i], &lane_color, nullptr);
       }
-      else {
-        red_lvl = 1.0 ;
-        green_lvl = 1.0 - (0.4 - scene.lane_line_probs[i]) * 2.5;
+    } else {
+      for (int i = 0; i < std::size(scene.lane_line_vertices); i++) {
+        NVGcolor color = nvgRGBAf(1.0, 1.0, 1.0, scene.lane_line_probs[i]);
+        ui_draw_line(s, scene.lane_line_vertices[i], &color, nullptr);
       }
-      NVGcolor lane_color = nvgRGBAf(red_lvl, green_lvl, 0, 1);
-      ui_draw_line(s, scene.lane_line_vertices[i], &lane_color, nullptr);
     }
 
     // paint road edges
@@ -236,8 +245,6 @@ static void ui_draw_vision_lane_lines(UIState *s) {
       ui_draw_line(s, scene.road_edge_vertices[i], &color, nullptr);
     }
 
-    int steerOverride = s->scene.car_state.getSteeringPressed();
-    auto controls_state = (*s->sm)["controlsState"].getControlsState();
     if (s->scene.controls_state.getEnabled()) {
       // Draw colored track
       if (steerOverride) {

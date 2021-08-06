@@ -574,6 +574,7 @@ struct ControlsState @0x97ff69c53601abf1 {
   steerRatio @68 :Float32;
   steerRateCost @69 :Float32;
   steerActuatorDelay @70 :Float32;
+  lateralControlMethod  @71 :UInt8;
 
   enum OpenpilotState @0xdbe58b96d2d1ac61 {
     disabled @0;

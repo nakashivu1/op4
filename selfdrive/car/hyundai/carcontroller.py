@@ -102,7 +102,10 @@ class CarController():
     self.steer_rate_limited = new_steer != apply_steer
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
-    lkas_active = enabled and abs(CS.out.steeringAngleDeg) < CS.CP.maxSteeringAngleDeg
+    if self.car_fingerprint == CAR.GENESIS:
+      lkas_active = enabled and abs(CS.out.steeringAngleDeg) < CS.CP.maxSteeringAngleDeg
+    else:
+      lkas_active = enabled
 
     # fix for Genesis hard fault at low speed
     if CS.out.vEgo < 60 * CV.KPH_TO_MS and self.car_fingerprint == CAR.GENESIS and not CS.mdps_bus:
@@ -175,7 +178,7 @@ class CarController():
 
     if pcm_cancel_cmd and (self.longcontrol and not self.mad_mode_enabled):
       can_sends.append(create_clu11(self.packer, frame % 0x10, CS.scc_bus, CS.clu11, Buttons.CANCEL, clu11_speed))
-    else:
+    if CS.mdps_bus:
       can_sends.append(create_mdps12(self.packer, frame % 0x100, CS.mdps12))
 
     # fix auto resume - by neokii
@@ -197,9 +200,9 @@ class CarController():
         can_sends.append(create_clu11(self.packer, self.resume_cnt, CS.scc_bus, CS.clu11, Buttons.RES_ACCEL, clu11_speed))
         self.resume_cnt += 1
 
-        if self.resume_cnt >= 4:
+        if self.resume_cnt >= 8:
           self.resume_cnt = 0
-          self.resume_wait_timer = SccSmoother.get_wait_count() * 1
+          self.resume_wait_timer = SccSmoother.get_wait_count() * 2
 
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:

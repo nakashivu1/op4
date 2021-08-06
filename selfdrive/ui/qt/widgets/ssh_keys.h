@@ -58,3 +58,19 @@ private:
   
   void refresh();
 };
+
+// Lateral Control Button
+class LateralControl : public AbstractControl {
+  Q_OBJECT
+
+public:
+  LateralControl();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
