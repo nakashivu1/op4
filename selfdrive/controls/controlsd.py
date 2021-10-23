@@ -183,8 +183,6 @@ class Controls:
     self.rk = Ratekeeper(100, print_delay_threshold=None)
     self.prof = Profiler(False)  # off by default
 
-    self.live_sr = params.get_bool("OpkrLiveSteerRatio")
-
   def update_events(self, CS):
     """Compute carEvents from carState"""
 
@@ -459,10 +457,10 @@ class Controls:
     x = max(params.stiffnessFactor, 0.1)
     #sr = max(params.steerRatio, 0.1)
 
-    if self.live_sr:
+    if ntune_isEnabled('useLiveSteerRatio'):
       sr = max(params.steerRatio, 0.1)
     else:
-      sr = max(self.new_steerRatio, 0.1)
+      sr = max(ntune_get('steerRatio'), 0.1)
 
     self.VM.update_params(x, sr)
 
@@ -570,8 +568,8 @@ class Controls:
       l_lane_change_prob = meta.desirePrediction[Desire.laneChangeLeft - 1]
       r_lane_change_prob = meta.desirePrediction[Desire.laneChangeRight - 1]
       cameraOffset = ntune_get("cameraOffset")
-      l_lane_close = left_lane_visible and (self.sm['modelV2'].laneLines[1].y[0] > -(1.08 + CAMERA_OFFSET))
-      r_lane_close = right_lane_visible and (self.sm['modelV2'].laneLines[2].y[0] < (1.08 - CAMERA_OFFSET))
+      l_lane_close = left_lane_visible and (self.sm['modelV2'].laneLines[1].y[0] > -(1.08 + cameraOffset))
+      r_lane_close = right_lane_visible and (self.sm['modelV2'].laneLines[2].y[0] < (1.08 - cameraOffset))
 
       CC.hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       CC.hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
