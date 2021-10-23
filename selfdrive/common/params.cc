@@ -244,8 +244,11 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"LegacySshKey", PERSISTENT},
     {"IsOpenpilotViewEnabled", CLEAR_ON_MANAGER_START},
     {"EnableLogger", PERSISTENT},
+    {"OpkrLiveSteerRatio", PERSISTENT},
     {"LateralControlMethod", PERSISTENT},
     {"AutoScreenRecording", PERSISTENT},
+    {"LeftCurvOffsetAdj", PERSISTENT},
+    {"RightCurvOffsetAdj", PERSISTENT},
 };
 
 } // namespace
