@@ -461,6 +461,25 @@ class Controls:
 
   def state_control(self, CS):
     """Given the state, this function returns an actuators packet"""
+    lat_plan = self.sm['lateralPlan']
+    long_plan = self.sm['longitudinalPlan']
+
+    output_scale = lat_plan.outputScale
+    if not self.live_sr:
+      if abs(output_scale) >= self.CP.steerMaxV[0] and CS.vEgo > 8 and not CS.steeringPressed:
+        self.mpc_frame_sr += 1
+        if self.mpc_frame_sr > 20:
+          self.new_steerRatio_prev = interp(CS.steeringAngleDeg, self.steer_angle_range, self.steerRatio_range)
+          if self.new_steerRatio_prev > self.new_steerRatio:
+            self.new_steerRatio = self.new_steerRatio_prev
+      else:
+        self.mpc_frame += 1
+        if self.mpc_frame % 100 == 0:
+          self.new_steerRatio -= 0.1
+          if self.new_steerRatio <= self.CP.steerRatio:
+            self.new_steerRatio = self.CP.steerRatio
+          self.mpc_frame = 0
+          self.mpc_frame_sr = 0
 
     # Update VehicleModel
     params = self.sm['liveParameters']
