@@ -183,16 +183,6 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
     }
   });
 
-//Delete previously assigned dongle ID
-  auto DeletedongleID = new ButtonControl("Delete previously assigned dongle ID", "DELETE",
-                                        "This allows retropilot server to assign new dongle ID");
-  connect(DeletedongleID, &ButtonControl::clicked, [=]() { 
-    if (ConfirmationDialog::confirm("Are you sure you want to delete assigned dongle ID? System will reboot!!", this)) {
-      system("cd /data/params/d && rm DongleId && reboot");
-      ConfirmationDialog::confirm("Completed", this); 
-    }
-  });
-
   QString resetCalibDesc = "openpilot requires the device to be mounted within 4° left or right and within 5° up or down. openpilot is continuously calibrating, resetting is rarely required.";
   auto resetCalibBtn = new ButtonControl("Reset Calibration", "RESET", resetCalibDesc);
   connect(resetCalibBtn, &ButtonControl::clicked, [=]() {
@@ -240,7 +230,7 @@ DevicePanel::DevicePanel(QWidget* parent) : QWidget(parent) {
     }
   });
 
-  for (auto btn : {dcamBtn, nTuneBtn, DeleteDRBtn, DeleteRawVidBtn, DeletedongleID, resetCalibBtn, retrainingBtn, uninstallBtn}) {
+  for (auto btn : {dcamBtn, nTuneBtn, DeleteDRBtn, DeleteRawVidBtn, resetCalibBtn, retrainingBtn, uninstallBtn}) {
     if (btn) {
       main_layout->addWidget(horizontal_line());
       connect(parent, SIGNAL(offroadTransition(bool)), btn, SLOT(setEnabled(bool)));
@@ -423,8 +413,8 @@ QWidget * community_panel() {
 
   toggles_list->addWidget(supported_cars);
   toggles_list->addWidget(horizontal_line());
-//  toggles_list->addWidget(new LateralControl());
-//  toggles_list->addWidget(horizontal_line());
+  toggles_list->addWidget(new LateralControl());
+  toggles_list->addWidget(horizontal_line());
   toggles_list->addWidget(new ParamControl("UseClusterSpeed",
                                             "Use Cluster Speed",
                                             "Use cluster speed instead of wheel speed.",
@@ -504,21 +494,6 @@ QWidget * community_panel() {
   return widget;
 }
 
-TuningPanel::TuningPanel(QWidget* parent) : QWidget(parent) {
-  QVBoxLayout *layout = new QVBoxLayout(this);
-
-  layout->addWidget(new LabelControl("Tuning Menu", ""));
-  layout->addWidget(new LiveSteerRatioToggle());
-  layout->addWidget(new LeftCurvOffset());
-  layout->addWidget(new RightCurvOffset());
-
-  layout->addWidget(horizontal_line());
-
-  layout->addWidget(new LabelControl("Control Menu", ""));
-  layout->addWidget(new LateralControl());
-
-}
-
 void SettingsWindow::showEvent(QShowEvent *event) {
   panel_widget->setCurrentIndex(0);
   nav_btns->buttons()[0]->setChecked(true);
@@ -563,7 +538,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {"Toggles", new TogglesPanel(this)},
     {"Software", new SoftwarePanel(this)},
     {"Community", community_panel()},
-    {"Tuning", new TuningPanel(this)},
   };
 
 #ifdef ENABLE_MAPS
