@@ -165,3 +165,121 @@ void LateralControl::refresh() {
   btnminus.setText("◀");
   btnplus.setText("▶");
 }
+
+LeftCurvOffset::LeftCurvOffset() : AbstractControl("Offset Adjustment (Left Curve)", "Adjust the vehicle position in the curve section (-value: move the car to the left, + value: move the car to the right)", "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("LeftCurvOffsetAdj"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -30 ) {
+      value = -30;
+    }
+    QString values = QString::number(value);
+    params.put("LeftCurvOffsetAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("LeftCurvOffsetAdj"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 30 ) {
+      value = 30;
+    }
+    QString values = QString::number(value);
+    params.put("LeftCurvOffsetAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void LeftCurvOffset::refresh() {
+  label.setText(QString::fromStdString(params.get("LeftCurvOffsetAdj")));
+  btnminus.setText("－");
+  btnplus.setText("＋");
+}
+
+RightCurvOffset::RightCurvOffset() : AbstractControl("Offset Adjustment (Right Curve)", "Adjust the vehicle position in the curve section (-value: move the car to the left, + value: move the car to the right)", "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("RightCurvOffsetAdj"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -30 ) {
+      value = -30;
+    }
+    QString values = QString::number(value);
+    params.put("RightCurvOffsetAdj", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("RightCurvOffsetAdj"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 30 ) {
+      value = 30;
+    }
+    QString values = QString::number(value);
+    params.put("RightCurvOffsetAdj", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void RightCurvOffset::refresh() {
+  label.setText(QString::fromStdString(params.get("RightCurvOffsetAdj")));
+  btnminus.setText("－");
+  btnplus.setText("＋");
+}

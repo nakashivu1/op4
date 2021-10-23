@@ -45,6 +45,18 @@ public:
   }
 };
 
+class LiveSteerRatioToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  LiveSteerRatioToggle() : ToggleControl("Enable Live SteerRatio", "Enables Live SteerRatio instead of variable/fixed SR.", "../assets/offroad/icon_shell.png", Params().getBool("OpkrLiveSteerRatio")) {
+    QObject::connect(this, &LiveSteerRatioToggle::toggleFlipped, [=](int state) {
+      char value = state ? '1' : '0';
+      Params().put("OpkrLiveSteerRatio", &value, 1);
+    });
+  }
+};
+
 // openpilot Preview
 class OpenpilotView : public AbstractControl {
   Q_OBJECT
@@ -65,6 +77,35 @@ class LateralControl : public AbstractControl {
 
 public:
   LateralControl();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
+
+class LeftCurvOffset : public AbstractControl {
+  Q_OBJECT
+
+public:
+  LeftCurvOffset();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
+class RightCurvOffset : public AbstractControl {
+  Q_OBJECT
+
+public:
+  RightCurvOffset();
 
 private:
   QPushButton btnplus;
