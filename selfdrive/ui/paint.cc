@@ -563,21 +563,21 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
   bool batteryless =  batteryTemp < -20;
 
   // add CPU usage percent
-  if (UI_FEATURE_RIGHT_CPU_USAGE_PERCENT) {
+//  if (UI_FEATURE_RIGHT_CPU_USAGE_PERCENT) {
 
-    int cpuUsagePercent = device_state.getCpuUsagePercent();
-    char val_str[16];
-    char uom_str[6];
-    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
+//    int cpuUsagePercent = device_state.getCpuUsagePercent();
+//    char val_str[16];
+//    char uom_str[6];
+//    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
-    snprintf(uom_str, sizeof(uom_str), "%d%%", cpuUsagePercent);
-    snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "CPU USAGE",
-        bb_rx, bb_ry, bb_uom_dx,
-        val_color, lab_color, uom_color,
-        value_fontSize, label_fontSize, uom_fontSize );
-    bb_ry = bb_y + bb_h;
-  }
+//    snprintf(uom_str, sizeof(uom_str), "%d%%", cpuUsagePercent);
+//    snprintf(uom_str, sizeof(uom_str), "");
+//    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "CPU USAGE",
+//        bb_rx, bb_ry, bb_uom_dx,
+//        val_color, lab_color, uom_color,
+//        value_fontSize, label_fontSize, uom_fontSize );
+//    bb_ry = bb_y + bb_h;
+//  }
 
   // add battery level
 //    if(UI_FEATURE_RIGHT_BATTERY_LEVEL && !batteryless) {
@@ -598,19 +598,19 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
 //  }
 
   // add panda GPS altitude
-//  if (UI_FEATURE_RIGHT_GPS_ALTITUDE) {
-//    char val_str[16];
-//    char uom_str[3];
-//    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
+  if (UI_FEATURE_RIGHT_GPS_ALTITUDE) {
+    char val_str[16];
+    char uom_str[3];
+    NVGcolor val_color = nvgRGBA(255, 255, 255, 200);
 
-//    snprintf(val_str, sizeof(val_str), "%.1f", s->scene.gps_ext.getAltitude());
-//    snprintf(uom_str, sizeof(uom_str), "m");
-//    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ALTITUDE",
-//        bb_rx, bb_ry, bb_uom_dx,
-//        val_color, lab_color, uom_color,
-//        value_fontSize, label_fontSize, uom_fontSize );
-//    bb_ry = bb_y + bb_h;
-//  }
+    snprintf(val_str, sizeof(val_str), "%.1f", s->scene.gps_ext.getAltitude());
+    snprintf(uom_str, sizeof(uom_str), "m");
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ALTITUDE",
+        bb_rx, bb_ry, bb_uom_dx,
+        val_color, lab_color, uom_color,
+        value_fontSize, label_fontSize, uom_fontSize );
+    bb_ry = bb_y + bb_h;
+  }
 
   // add panda GPS accuracy
   if (UI_FEATURE_RIGHT_GPS_ACCURACY) {
