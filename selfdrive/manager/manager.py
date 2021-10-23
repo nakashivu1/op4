@@ -55,10 +55,7 @@ def manager_init():
     ("ShowDebugUI", "0"),
     ("FuseWithStockScc", "1"),
     ("IsOpenpilotViewEnabled", "0"),
-    ("OpkrLiveSteerRatio", "0"),
     ("LateralControlMethod", "0"),
-    ("LeftCurvOffsetAdj", "0"),
-    ("RightCurvOffsetAdj", "0"),
     ("CustomLeadMark", "0")
   ]
   if not PC:
