@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 import os
 import math
@@ -182,12 +183,6 @@ class Controls:
     self.rk = Ratekeeper(100, print_delay_threshold=None)
     self.prof = Profiler(False)  # off by default
 
-    self.mpc_frame = 0
-    self.mpc_frame_sr = 0
-
-    self.steerRatio_to_send = 0
-    self.live_sr = params.get_bool("OpkrLiveSteerRatio")
-
   def update_events(self, CS):
     """Compute carEvents from carState"""
 
@@ -315,7 +310,7 @@ class Controls:
       #  if not self.sm['liveLocationKalman'].gpsOK and (self.distance_traveled > 1000):
       #    # Not show in first 1 km to allow for driving out of garage. This event shows after 5 minutes
       #    self.events.add(EventName.noGps)
-      if not self.sm.all_alive(self.camera_packets) and CS.vEgo > 0.3:
+      if not self.sm.all_alive(self.camera_packets):
         self.events.add(EventName.cameraMalfunction)
       if self.sm['modelV2'].frameDropPerc > 20:
         self.events.add(EventName.modeldLagging)
@@ -347,7 +342,7 @@ class Controls:
     self.sm.update(0)
 
     all_valid = CS.canValid and self.sm.all_alive_and_valid()
-    if not self.initialized and (all_valid or self.sm.frame * DT_CTRL > 3.5):
+    if not self.initialized and (all_valid or self.sm.frame * DT_CTRL > 2.0):
       self.CI.init(self.CP, self.can_sock, self.pm.sock['sendcan'])
       self.initialized = True
       Params().put_bool("ControlsReady", True)
@@ -456,21 +451,21 @@ class Controls:
 
   def state_control(self, CS):
     """Given the state, this function returns an actuators packet"""
-    lat_plan = self.sm['lateralPlan']
-    long_plan = self.sm['longitudinalPlan']
 
     # Update VehicleModel
     params = self.sm['liveParameters']
     x = max(params.stiffnessFactor, 0.1)
+    #sr = max(params.steerRatio, 0.1)
 
-    if self.live_sr:
+    if ntune_isEnabled('useLiveSteerRatio'):
       sr = max(params.steerRatio, 0.1)
     else:
-      sr = max(self.new_steerRatio, 0.1)
+      sr = max(ntune_get('steerRatio'), 0.1)
 
     self.VM.update_params(x, sr)
 
-    self.steerRatio_to_send = sr
+    lat_plan = self.sm['lateralPlan']
+    long_plan = self.sm['longitudinalPlan']
 
     actuators = car.CarControl.Actuators.new_message()
 
@@ -572,8 +567,9 @@ class Controls:
     if len(meta.desirePrediction) and ldw_allowed:
       l_lane_change_prob = meta.desirePrediction[Desire.laneChangeLeft - 1]
       r_lane_change_prob = meta.desirePrediction[Desire.laneChangeRight - 1]
-      l_lane_close = left_lane_visible and (self.sm['modelV2'].laneLines[1].y[0] > -(1.08 + CAMERA_OFFSET))
-      r_lane_close = right_lane_visible and (self.sm['modelV2'].laneLines[2].y[0] < (1.08 - CAMERA_OFFSET))
+      cameraOffset = ntune_get("cameraOffset")
+      l_lane_close = left_lane_visible and (self.sm['modelV2'].laneLines[1].y[0] > -(1.08 + cameraOffset))
+      r_lane_close = right_lane_visible and (self.sm['modelV2'].laneLines[2].y[0] < (1.08 - cameraOffset))
 
       CC.hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       CC.hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
@@ -639,7 +635,7 @@ class Controls:
     controlsState.aReqValueMin = self.aReqValueMin
     controlsState.aReqValueMax = self.aReqValueMax
 
-    controlsState.steerRatio = float(self.steerRatio_to_send)
+    controlsState.steerRatio = self.VM.sR
     controlsState.steerRateCost = ntune_get('steerRateCost')
     controlsState.steerActuatorDelay = ntune_get('steerActuatorDelay')
 
