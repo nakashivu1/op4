@@ -182,9 +182,6 @@ class Controls:
     self.rk = Ratekeeper(100, print_delay_threshold=None)
     self.prof = Profiler(False)  # off by default
 
-    self.mpc_frame = 0
-    self.mpc_frame_sr = 0
-
     self.steerRatio_to_send = 0
     self.live_sr = params.get_bool("OpkrLiveSteerRatio")
 
